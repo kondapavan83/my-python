@@ -1,0 +1,62 @@
+root@rs-fw-1# set interfaces xe-0/0/0 ?
+Possible completions:
+  accounting-profile   Accounting profile name
++ apply-groups         Groups from which to inherit configuration data
++ apply-groups-except  Don't inherit configuration data from these groups
+> clocking             Interface clock source
+  description          Text description of interface
+  disable              Disable this interface
+  encapsulation        Physical link-layer encapsulation
+> ether-options        Ethernet interface-specific options
+  flexible-vlan-tagging  Support for no tagging, or single and double 802.1q VLAN tagging
+> framing              Frame type
+> gigether-options     Gigabit Ethernet interface-specific options
+  gratuitous-arp-reply  Enable gratuitous ARP reply
+> hold-time            Hold time for link up and link down
+  link-mode            Link operational mode
+  mac                  Hardware MAC address
+  mtu                  Maximum transmit packet size (256..9192)
+  native-vlan-id       Virtual LAN identifier for untagged frames (0..4094)
+  no-gratuitous-arp-reply  Don't enable gratuitous ARP reply
+  no-gratuitous-arp-request  Ignore gratuitous ARP request
+  no-per-unit-scheduler  Don't enable subunit queuing on Frame Relay or VLAN IQ interface
+  no-traps             Don't enable SNMP notifications on state changes
+  passive-monitor-mode  Use interface to tap packets from another router
+  per-unit-scheduler   Enable subunit queuing on Frame Relay or VLAN IQ interface
+  promiscuous-mode     Enable promiscuous mode for L3 interface
+  stacked-vlan-tagging  Stacked 802.1q VLAN tagging support
+> traceoptions         Interface trace options
+  traps                Enable SNMP notifications on state changes
+> unit                 Logical interface
+  vlan-tagging         802.1q VLAN tagging support
+{primary:node0}[edit]
+root@rs-fw-1# set interfaces xe-0/0/0 speed
+                                      ^
+syntax error.
+
+{primary:node0}[edit]
+root@rs-fw-1# set interfaces xe-0/0/0 link-mode full-duplex
+
+root@rs-fw-1# set interfaces xe-0/0/0 ether-options no-auto-negotiation
+
+{primary:node0}[edit]
+
+
+
+{primary:node0}[edit]
+root@rs-fw-1# show | compare
+[edit interfaces xe-0/0/0]
++   link-mode full-duplex;
++   ether-options {
++       no-auto-negotiation;
++   }
+
+{primary:node0}[edit]
+root@rs-fw-1# commit check
+[edit interfaces xe-0/0/0]
+  'ether-options'
+    Speed and Duplex needs to be set before auto negotiation is disabled.
+error: configuration check-out failed
+
+{primary:node0}[edit]
+root@rs-fw-1#
