@@ -1,0 +1,122 @@
+---
+- name: configure AWS  VPN Tunnel interface and configure BGP routing
+  hosts: sc-gre-2
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: configure common config Tunnel interfaces
+      ios_config:
+        parents: "{{ item }}"
+        lines:
+          - description "USW2-QA encrypted tunnel usw2-QA/sec -> sc-gre-2/lo66_pnap"
+          - bandwidth 1000000
+          - vrf forwarding OT-IntraNet
+          - ip flow monitor netflow-orig output
+          - no ip unreachables
+          - ip mtu 1400
+          - ip tcp adjust-mss 1300
+          - load-interval 30
+          - shutdown
+          - keepalive 4 9
+          - tunnel mode ipsec ipv4
+          - tunnel source 66.151.130.24
+      with_items:
+        - interface Tunnel 11
+        - interface Tunnel 12
+      register: output1
+
+    - name: configure specific config Tunnel 11
+      ios_config:
+        parents: interface Tunnel 11
+        lines:
+          - ip address 169.254.159.86 255.255.255.252
+          - tunnel destination 35.163.148.220
+          - tunnel protection ipsec profile ipsec-vpn-015574b756800326f-0
+      register: output2
+    - name: configure specific config Tunnel 12
+      ios_config:
+        parents: interface Tunnel 12
+        lines:
+          - ip address 169.254.151.178 255.255.255.252
+          - tunnel destination 52.10.38.40
+          - tunnel protection ipsec profile ipsec-vpn-015574b756800326f-1
+      register: output3
+    - name: configure BGP routing
+      ios_config:
+        parents: address-family ipv4 vrf OT-IntraNet
+        lines:
+          - neighbor {{ item }} remote-as 64512
+          - neighbor {{ item }} peer-group US-homed-QA-VPCs
+          - neighbor {{ item }} description eBGP AWS USW2-QA
+          - neighbor {{ item }} activate
+        before: router bgp 65000
+      with_items:
+        - 169.254.159.85
+        - 169.254.151.177
+      register: output4
+    - name: configure crypto keyring config
+      ios_config:
+        parents: crypto keyring keyring-vpn-015574b756800326f-0
+        lines:
+          - local-address 66.151.130.24
+          - pre-shared-key address 35.163.148.220 key GcGoL23pCebYrFMluDmvPAtBlH8gIYYE
+      register: output5
+    - name: configure crypto isakmp profile config
+      ios_config:
+        parents: crypto isakmp profile isakmp-vpn-015574b756800326f-0
+        lines:
+          - local-address 66.151.130.24
+          - match identity address 35.163.148.220
+          - keyring keyring-vpn-015574b756800326f-0
+      register: output6
+    - name: crypto ipsec transform-set
+      ios_config:
+        parents: crypto ipsec transform-set ipsec-prop-vpn-005f5022aa497b6af-"{{ item }}" esp-aes 128 esp-sha-hmac
+        lines:
+          - mode tunnel
+      with_items:
+        - 0
+        - 1
+      register: output7
+    - name: crypto ipsec profile
+      ios_config:
+        parents: crypto ipsec profile ipsec-vpn-005f5022aa497b6af-"{{item}}"
+        lines:
+          - set pfs group2
+          - set security-association lifetime seconds 3600
+          - set transform-set ipsec-prop-vpn-005f5022aa497b6af-"{{item}}"
+      with_items:
+        - 0
+        - 1
+      register: output8
+    - name: configure crypto keyring config
+      ios_config:
+        parents: crypto keyring keyring-vpn-015574b756800326f-1
+        lines:
+          - local-address 66.151.130.24
+          - pre-shared-key address 52.10.38.40 key NFsbkspyoMYw7Ie.PzxkNOodFnQvYohU
+      register: output9
+    - name: configure crypto isakmp profile config
+      ios_config:
+        parents: crypto isakmp profile isakmp-vpn-015574b756800326f-1
+        lines:
+          - local-address 66.151.130.24
+          - match identity address 52.10.38.40
+          - keyring keyring-vpn-015574b756800326f-1
+      register: output10
+    - name: print output
+      debug:
+        var: output{{item}}.commands
+      with_items:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
