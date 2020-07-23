@@ -8,7 +8,7 @@
 import re
 # ssh=paramiko.SSHClient()
 # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-# ssh.connect('sc-fw-01.net.opentable.com',port=22,username='nkonda',password='5mart@Witty4orT!Tude')
+# ssh.connect('sc-fw-01.net.opentable.com',port=22,username='abc',password='xxx')
 # stdin,stdout,stderr=ssh.exec_command('show  conn')
 # a=stdout.readlines()
 f=open("/Users/nkonda/Desktop/connections1.txt","r")
