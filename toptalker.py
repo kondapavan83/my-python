@@ -11,7 +11,7 @@ import re
 # ssh.connect('sc-fw-01.net.op3n-tabe.com',port=22,username='abc',password='xxx')
 # stdin,stdout,stderr=ssh.exec_command('show  conn')
 # a=stdout.readlines()
-f=open("/Users/nkonda/Desktop/connections1.txt","r")
+f=open("/Users/abc/Desktop/connections1.txt","r")
 a=f.readlines()
 f.close()
 #ssh.close()
