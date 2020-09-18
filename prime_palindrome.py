@@ -23,7 +23,4 @@ def p(a):
     else:
       t=False
       break
-  if t==True:
-    return True
-  else:
-    return False
+  return t
