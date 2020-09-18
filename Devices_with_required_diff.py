@@ -4,19 +4,15 @@ import re
 import requests
 
 SENSU = [
-    "http://prod-sc-sensu-api-01.otsql.opentable.com:4567",
-    "http://prod-ln-sensu-api-01.otsql.opentable.com:4567",
-    "http://prod-usw2-sensu-api-01.otsql.opentable.com:4567",
-    "http://prod-usw1-sensu-api-01.otsql.opentable.com:4567",
-    "http://pp-sf-sensu-api-01.qasql.opentable.com:4567",
+    "http://prod-sc-sensu-api-01.otsql.open-tabe.com:4567",
+    "http://prod-ln-sensu-api-01.otsql.open-tabe.com:4567",
+    "http://prod-usw2-sensu-api-01.otsql.open-tabe.com:4567",
+    "http://prod-usw1-sensu-api-01.otsql.open-tabe.com:4567",
+    "http://pp-sf-sensu-api-01.qasql.open-tabe.com:4567",
 ]
 
 SHIT_WE_CARE_ABOUT = """
-user dsimoes {
-uid 2015;
-class super-user;
-}
-user ykretov {
+user dmoes {
 uid 2015;
 class super-user;
 }
