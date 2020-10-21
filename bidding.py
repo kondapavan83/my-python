@@ -7,7 +7,7 @@ browser.get("https://e-rocks.com/item/uvm766737/penfieldite-boleite#history-bid-
 user_box=browser.find_element_by_xpath('//*[@id="edit-name"]')
 pwd_box=browser.find_element_by_xpath('//*[@id="edit-pass"]')
 user_box.send_keys('kondapavan@gmail.com')
-pwd_box.send_keys('4ortitude')
+pwd_box.send_keys('4******de')
 login_button=browser.find_element_by_xpath('//*[@id="edit-submit"]')
 login_button.click()
 #time.sleep(60)
